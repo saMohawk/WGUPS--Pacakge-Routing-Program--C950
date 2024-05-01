@@ -1,7 +1,6 @@
 import datetime
 from package import packageHashTable
-from truck import truck1, truck2, truck3
-
+from truck import truck1, truck2, truck3, getTruckAssignedToPackage
 
 # C950 - Sara Mohammed
 # Student ID: 006868543
@@ -10,9 +9,15 @@ from truck import truck1, truck2, truck3
 print("****************************************************")
 print("Western Governors University Parcel Service (WGUPS)")
 print("****************************************************")
-# print("The mileage for the route is:")
-# print(truck1.mileage + truck2.mileage + truck3.mileage)
 print("*************")
+# print("The total mileage for the completed route is:")
+# print(truck1.mileage + truck2.mileage + truck3.mileage)
+# print("*************")
+# print("truck 1 completed delivery at: ", truck1.time)
+# print("truck 3 completed delivery at: ", truck3.time)
+# print("truck 2 completed delivery at: ", truck2.time)
+# print("*************")
+# print("*************")
 
 # option 1: print all package data at a given time
 def checkAllPackageStatus(time):
@@ -20,7 +25,23 @@ def checkAllPackageStatus(time):
         package = packageHashTable.getValue(id)
         package.currentStatus(time)
 
-        print("ID: ", package.ID, ", Current Status: ", package.status)
+        if package.status == "delivered":
+            # print(package.status)
+            print(f"Package ID: {package.ID} | Delivery Deadline: {package.deadline} | Delivery Address: {package.deliveryAddress}")
+            print(f"    Package status: delivered at {package.deliveryTime} to {package.finalAddress}")
+        elif package.status == "out for delivery":
+            truck = getTruckAssignedToPackage(package.ID)
+            if truck is not None:
+                print(f"Package ID: {package.ID} | Delivery Deadline: {package.deadline} | Delivery Address: {package.deliveryAddress}")
+                print(f"    Package Status: out for delivery. Currently located on truck {truck.truckID} at {truck.address}")
+            else:
+                print("package not assigned to any truck")
+
+        else:
+            truck = getTruckAssignedToPackage(package.ID)
+            print(f"Package ID: {package.ID} | Delivery Deadline: {package.deadline} | Delivery Address: {package.deliveryAddress}")
+            print(f"     Package Status: at hub, 4001 S 700 E. Assigned to truck {truck.truckID}")
+
 
 
 # option 2: print data for certain ID at a give time
@@ -31,11 +52,24 @@ def checkOnePackageStatus(packageID, time):
         return
 
     package.currentStatus(time)
-    print(f"ID: {package.ID}, Current Status: {package.status}")
-    # package.currentStatus(time)
-    # print(package)
+    truck = getTruckAssignedToPackage(package.ID)
 
-# prompt for user to input time
+    print(f"Printing all package info for ID#{package.ID}:")
+    print(f"*********")
+    print(f"Current Status: {package.status}")
+    if package.status == "delivered":
+        print(f'Delivered at {package.deliveryTime} to {package.finalAddress}')
+    elif package.status == "out for delivery":
+        print(f'Current Location: {truck.address} on truck {truck.truckID}')
+    else:
+        print("preparing for delivery")
+
+    print(f'Delivery Deadline: {package.deadline}')
+    print(f'Delivery Address: {package.deliveryAddress}, {package.city}, {package.state}, {package.Zip}')
+    print(f'Package Weight(kg): {package.weight}')
+    print(f'Special Notes (optional): {package.notes}')
+
+
 print("Welcome to the WGUPS package status check interface.")
 input_time = input("Please enter the time (HH:MM:SS format): ")
 hour, minute, second = input_time.split(":")
@@ -63,19 +97,6 @@ elif branch_input == "n":
 
 else:
     exit()
-
-
-print("*************")
-print("The mileage for the route is:")
-print(truck1.mileage + truck2.mileage + truck3.mileage)
-print("*************")
-print("truck 1 completed delivery at: ", truck1.time)
-print("truck 3 completed delivery at: ", truck3.time)
-print("truck 2 completed delivery at: ", truck2.time)
-
-
-
-
 
 
 
