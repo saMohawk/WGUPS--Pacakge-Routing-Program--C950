@@ -19,7 +19,7 @@ class Truck:
         return f'{self.packages}, {self.speed}, {self.mileage}, {self.address}, {self.departureTime}, {self.time}'
 
 # read distance csv
-with open("distance_file.csv") as distance_file:
+with open("CSV/distance_file.csv") as distance_file:
     distance = csv.reader(distance_file)
     distance = list(distance)
 
@@ -27,7 +27,7 @@ with open("distance_file.csv") as distance_file:
 # get addresses from csv
 def getAddress(address):
     addressList = []
-    with open('Address_File.csv') as address_file:
+    with open('CSV/Address_File.csv') as address_file:
         addresses = csv.reader(address_file)
         for row in addresses:
             addressList.append(row[2])  # assign values
@@ -70,7 +70,7 @@ def deliverPackages(truck):
     truck.packages.clear()  # clear list, allow algorithm to reorganize package list
 
     while len(notDelivered) > 0:  # until all packages are delivered
-        nextStop = 1000  # ititialize variables
+        nextStop = 1000  # initialize variables
         nextPackage = None
 
         # begin algorithm
@@ -79,16 +79,19 @@ def deliverPackages(truck):
             if distanceNextStop < nextStop: # assigns the smallest distance to next stop
                 nextStop = distanceNextStop
                 nextPackage = package
-                package.finalAddress = package.deliveryAddress # updates delivery address
+                # package.finalAddress = package.deliveryAddress # updates delivery address
 
         if nextPackage is not None:
             nextPackage.deliveryTime = truck.time # records time when package is delivered
             nextPackage.departureTime = truck.departureTime
 
+            if nextPackage.ID == "9":   # Check time for updated address for #9
+                nextPackage.updateAddress(nextPackage.ID, truck.departureTime)
+
             truck.packages.append(nextPackage.ID)  # add package next to be delivered
 
             notDelivered.remove(nextPackage)  # remove from notDelivered array
-
+            package.finalAddress = package.deliveryAddress
             truck.address = nextPackage.deliveryAddress  # update truck address
             truck.mileage += nextStop  # update mileage
             truck.time += datetime.timedelta(minutes=nextStop)
@@ -102,6 +105,9 @@ def getTruckAssignedToPackage(package_id):
         if package_id in truck.packages:
             return truck
     return None
+
+
+
 
 
 # val = 13

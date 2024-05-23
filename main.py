@@ -10,20 +10,21 @@ print("****************************************************")
 print("Western Governors University Parcel Service (WGUPS)")
 print("****************************************************")
 print("*************")
-# print("The total mileage for the completed route is:")
-# print(truck1.mileage + truck2.mileage + truck3.mileage)
-# print("*************")
-# print("truck 1 completed delivery at: ", truck1.time)
-# print("truck 3 completed delivery at: ", truck3.time)
-# print("truck 2 completed delivery at: ", truck2.time)
-# print("*************")
-# print("*************")
+print("The total mileage for the completed route is:")
+print(truck1.mileage + truck2.mileage + truck3.mileage)
+print("*************")
+print("truck 1 completed delivery at: ", truck1.time)
+print("truck 3 completed delivery at: ", truck3.time)
+print("truck 2 completed delivery at: ", truck2.time)
+print("*************")
+print("*************")
 
 # option 1: print all package data at a given time
 def checkAllPackageStatus(time):
     for id in range(1,41):
         package = packageHashTable.getValue(id)
         package.currentStatus(time)
+        package.updateAddress(time)
 
         if package.status == "delivered":
             # print(package.status)
@@ -47,6 +48,7 @@ def checkAllPackageStatus(time):
 # option 2: print data for certain ID at a give time
 def checkOnePackageStatus(packageID, time):
     package = packageHashTable.getValue(packageID)
+    package.updateAddress(time)
     if package is None:
         print("No package found with ID: ", packageID)
         return
@@ -58,7 +60,7 @@ def checkOnePackageStatus(packageID, time):
     print(f"*********")
     print(f"Current Status: {package.status}")
     if package.status == "delivered":
-        print(f'Delivered at {package.deliveryTime} to {package.finalAddress}')
+        print(f'Delivered at {package.deliveryTime} to {package.deliveryAddress}')
     elif package.status == "out for delivery":
         print(f'Current Location: {truck.address} on truck {truck.truckID}')
     else:
@@ -82,7 +84,7 @@ if branch_input == "y":
         id_input = int(input("Please enter the package ID: "))
         package = packageHashTable.getValue(id_input)
         checkOnePackageStatus(id_input, time_entered)
-       # print("ID: ", package.ID, ", Current Status: ", package.status)
+
     except ValueError:
         print("Please enter a valid package ID.")
         #exit()

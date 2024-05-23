@@ -1,5 +1,6 @@
 import csv
 from hash_table import HashTable
+import datetime
 
 # package object information
 class Package:
@@ -33,6 +34,16 @@ class Package:
         else:
             self.status = "at hub"
 
+
+# update address for package 9 when address is corrected
+    def updateAddress(self, time): #
+        if self.ID and time >= datetime.timedelta(hours=10, minutes=20):
+            self.deliveryAddress = "410 South State Street"
+            self.city = "Salt Lake City"
+            self.state = "UT"
+            self.Zip = "84111"
+
+
 # create hash table
 packageHashTable = HashTable()
 
@@ -57,7 +68,7 @@ def createPackage(file):
 
            packageHashTable.insert(pID, p)
 
-file_path = 'packageCSV.csv'
+file_path = 'CSV/packageCSV.csv'
 createPackage(file_path)
 
 
